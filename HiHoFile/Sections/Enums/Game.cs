@@ -1,4 +1,4 @@
-﻿namespace HoFile
+﻿namespace HiHoFile
 {
     public enum Game
     {

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F68908E6-6947-477E-8A88-3130BE2FDB06}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>HipHopFile</RootNamespace>
-    <AssemblyName>HipHopFile</AssemblyName>
+    <RootNamespace>HiHoFile</RootNamespace>
+    <AssemblyName>HiHoFile</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,14 +42,17 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Functions.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="HoFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sections\Enums\AssetType.cs" />
     <Compile Include="Sections\Enums\Game.cs" />
     <Compile Include="Sections\Enums\Platform.cs" />
-    <Compile Include="Sections\HoLayer.cs" />
-    <Compile Include="Sections\HoLayer_P.cs" />
-    <Compile Include="Sections\Section_AHDR.cs" />
+    <Compile Include="Sections\LayerEntry.cs" />
+    <Compile Include="Sections\Layer\SubLayer.cs" />
+    <Compile Include="Sections\Layer\SubLayer_PSLD.cs" />
+    <Compile Include="Sections\Layer\SubLayer_PSL.cs" />
+    <Compile Include="Sections\AssetEntry.cs" />
     <Compile Include="Sections\Section_HEL.cs" />
     <Compile Include="Sections\Section_MAST.cs" />
     <Compile Include="Sections\Section_SECT.cs" />

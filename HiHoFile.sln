@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiHoFile", "HiHoFile\HiHoFile.csproj", "{F68908E6-6947-477E-8A88-3130BE2FDB06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiHoTool", "HiHoTool\HiHoTool.csproj", "{8334D22A-9AB8-4B96-AA28-617A7635E8EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F68908E6-6947-477E-8A88-3130BE2FDB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F68908E6-6947-477E-8A88-3130BE2FDB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F68908E6-6947-477E-8A88-3130BE2FDB06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8334D22A-9AB8-4B96-AA28-617A7635E8EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8334D22A-9AB8-4B96-AA28-617A7635E8EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8334D22A-9AB8-4B96-AA28-617A7635E8EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8334D22A-9AB8-4B96-AA28-617A7635E8EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

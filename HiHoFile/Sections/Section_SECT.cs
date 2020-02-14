@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using static HoFile.Functions;
+using static HiHoFile.Extensions;
 
-namespace HoFile
+namespace HiHoFile
 {
     public class Section_SECT
     {
-        private List<HoLayer> layers;
+        public List<LayerEntry> layers;
 
         public Section_SECT()
         {
@@ -15,38 +15,31 @@ namespace HoFile
 
         public Section_SECT(BinaryReader binaryReader)
         {
-            binaryReader.BaseStream.Position += 4;
-            int layerCount = Switch(binaryReader.ReadInt32());
-            binaryReader.BaseStream.Position += 0x18;
+            int localOffset = (int)binaryReader.BaseStream.Position;
+            int unknown1 = binaryReader.ReadInt32().Switch();
+            int layerCount = binaryReader.ReadInt32().Switch();
+            int unknown2 = binaryReader.ReadInt32().Switch();
+            int sizeOfLayerData = binaryReader.ReadInt32().Switch();
+            int unknown3 = binaryReader.ReadInt32().Switch();
+            int secondLayerDataOffset = binaryReader.ReadInt32().Switch();
+            int sizeOfSecondLayerData = binaryReader.ReadInt32().Switch();
+            int unknown4 = binaryReader.ReadInt32().Switch();
 
-            layers = new List<HoLayer>(layerCount);
+            layers = new List<LayerEntry>(layerCount);
             for (int i = 0; i < layerCount; i++)
-            {
-                string layerType = new string(binaryReader.ReadChars(4));
-                switch (layerType)
-                {
-                    case "P   ":
-                        layers.Add(new HoLayer_P(binaryReader));
-                        break;
-                    case "PD  ":
-                        layers.Add(new HoLayer_PD(binaryReader));
-                        break;
-                    case "PTEX":
-                        layers.Add(new HoLayer_PTEX(binaryReader));
-                        break;
-                    case "PFST":
-                        layers.Add(new HoLayer_PFST(binaryReader));
-                        break;
-                }
-            }
+                layers.Add(new LayerEntry(binaryReader, localOffset));
 
             ReadString(binaryReader);
 
-            while (binaryReader.BaseStream.Position % 0x20 != 0)
+            while (binaryReader.BaseStream.Position % 0x10 != 0)
                 binaryReader.BaseStream.Position++;
 
-            for (int i = 0; i < layerCount; i++)
-                layers[i].SecondPartSetup(binaryReader);
+            binaryReader.BaseStream.Position = localOffset + secondLayerDataOffset + sizeOfSecondLayerData;
+            
+            foreach (LayerEntry layer in layers)
+            {
+                layer.subLayer.GetAssets(binaryReader, layer.offsetToStartOfLayerDataDividedBy0x800 * 0x800);
+            }
         }
 
         public void SetListBytes(ref List<byte> listBytes)
