@@ -79,6 +79,8 @@ namespace HiHoTool
                 }
             }
             listBoxAssets.EndUpdate();
+
+            listBoxAssets_SelectedIndexChanged(sender, e);
         }
 
         private void buttonExtractAll_Click(object sender, EventArgs e)
@@ -95,7 +97,7 @@ namespace HiHoTool
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("HiHoTool by igorseabra4");
+            MessageBox.Show("HiHoTool v0.1 is a Heavy Iron Studios .HO archive viewer/editor by igorseabra4.");
         }
 
         private void buttonExtract_Click(object sender, EventArgs e)
@@ -129,18 +131,23 @@ namespace HiHoTool
                                 if (openFile.ShowDialog() == DialogResult.OK)
                                 {
                                     byte[] file = File.ReadAllBytes(openFile.FileName);
-                                    if (file.Length == psl.assets[listBoxAssets.SelectedIndex].actualSize)
+                                    if (file.Length <= psl.assets[listBoxAssets.SelectedIndex].totalDataSize)
                                     {
                                         psl.assets[listBoxAssets.SelectedIndex].data = file;
-                                        ReplaceInEditableArray(psl.assets[listBoxAssets.SelectedIndex].absoluteDataOffset, file);
+                                        ReplaceInEditableArray(psl.assets[listBoxAssets.SelectedIndex].absoluteDataOffset, file, psl.assets[listBoxAssets.SelectedIndex].totalDataSize);
+
+                                        psl.assets[listBoxAssets.SelectedIndex].actualSize = file.Length;
+                                        WriteNewSizeInEditableArray(psl.assets[listBoxAssets.SelectedIndex].absoluteActualSizeOffset, file.Length);
+
+                                        listBoxAssets_SelectedIndexChanged(sender, e);
                                     }
                                     else
-                                    MessageBox.Show($"Please choose a file with the same size as the asset you want to replace.\n" +
-                                        $"Asset size: {psl.assets[listBoxAssets.SelectedIndex].actualSize} bytes\n" +
+                                    MessageBox.Show($"Please choose a file with at most the maximum size of the asset you want to replace.\n" +
+                                        $"Maximum asset size: {psl.assets[listBoxAssets.SelectedIndex].totalDataSize} bytes\n" +
                                         $"Size of your file: {file.Length} bytes");
                                 }
         }
-
+        
         private ulong GetSelectedAssetID()
         {
             if (listBoxAssets.SelectedItem != null)
@@ -149,22 +156,31 @@ namespace HiHoTool
             return 0;
         }
 
-        private void ReplaceInEditableArray(int offset, byte[] file)
+        private void ReplaceInEditableArray(int offset, byte[] file, int maxSize)
         {
             for (int i = 0; i < file.Length; i++)
                 editableHoFile[offset + i] = file[i];
+            for (int i = file.Length; i < maxSize; i++)
+                editableHoFile[offset + i] = 0x33;
+        }
+
+        private void WriteNewSizeInEditableArray(int offset, int length)
+        {
+            byte[] bytes = BitConverter.GetBytes(length.Switch());
+            for (int i = 0; i < bytes.Length; i++)
+                editableHoFile[offset + i] = bytes[i];
         }
 
         private void listBoxAssets_SelectedIndexChanged(object sender, EventArgs e)
         {
-            label2.Text = "Size: ";
+            label2.Text = "";
             ulong assetID = GetSelectedAssetID();
 
             if (assetID != 0)
                 if (listBoxLayers.SelectedIndex > -1 && listBoxLayers.SelectedIndex < hoFile.MAST.sectionSect2.layers.Count)
                     if (hoFile.MAST.sectionSect2.layers[listBoxLayers.SelectedIndex].subLayer is SubLayer_PSL psl)
                         if (listBoxAssets.SelectedIndex > -1 && listBoxAssets.SelectedIndex < psl.assets.Count)
-                            label2.Text = "Size: " + psl.assets[listBoxAssets.SelectedIndex].actualSize.ToString();
+                            label2.Text = "Size: " + psl.assets[listBoxAssets.SelectedIndex].actualSize.ToString() + "\nMax Size: " + psl.assets[listBoxAssets.SelectedIndex].totalDataSize.ToString();
         }
 
         private void buttonDestroy_Click(object sender, EventArgs e)

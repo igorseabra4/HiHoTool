@@ -17,11 +17,13 @@ namespace HiHoFile
 
         public byte[] data;
         public int absoluteDataOffset; // used only for replacement
+        public int absoluteActualSizeOffset; // used only for replacement
         
         public AssetEntry(BinaryReader binaryReader, int localOffset)
         {
             totalDataSize = binaryReader.ReadInt32().Switch();
             relativeDataOffset = binaryReader.ReadInt32().Switch();
+            absoluteActualSizeOffset = (int)binaryReader.BaseStream.Position;
             actualSize = binaryReader.ReadInt32().Switch();
             unk0C = binaryReader.ReadInt32().Switch();
             assetID = binaryReader.ReadUInt64().Switch();

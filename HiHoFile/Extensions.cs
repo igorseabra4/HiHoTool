@@ -53,21 +53,7 @@ namespace HiHoFile
                 return value;
             return BitConverter.ToSingle(BitConverter.GetBytes(value).Reverse().ToArray(), 0);
         }
-
-        public static AssetType AssetTypeFromHash(uint hash, out bool found)
-        {
-            foreach (AssetType type in Enum.GetValues(typeof(AssetType)))
-                if (BKDRHash(type.ToString()) == hash)
-                {
-                    found = true;
-                    return type;
-                }
-
-            found = false;
-            return AssetType.Null;
-            throw new ArgumentException("Unknown asset type found: " + hash.ToString("X8"));
-        }
-
+        
         public static uint BKDRHash(string str)
         {
             str = str.ToUpper();
